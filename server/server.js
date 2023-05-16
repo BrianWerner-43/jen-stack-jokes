@@ -5,12 +5,19 @@ const PORT = 5000;
 
 // use bodyParser.urlencoded throughout the app with this:
 app.use(bodyParser.urlencoded({ extended: true }));
+app.get('/jokes', function(req, res){
+  res.send(jokeHistory);
+  console.log('request for jokes was made');
+})
+app.post('/jokeHistory', (req, res) => {
+  console.log('post some data', res.body, req.body);
+
 
 let jokes = [
   {
     whoseJoke: "Danny",
     jokeQuestion: "Why do scuba divers fall backwards out of boats?",
-    punchLine: "If they fell forwards they’d still be in the boat!"
+    punchLine: "If they fell forwards they/d still be in the boat!"
   },
   {
     whoseJoke: "Luke",
@@ -32,7 +39,10 @@ let jokes = [
     jokeQuestion: "I went to the zoo the other day, it had one dog...",
     punchLine: "It was a shih tzu."
   }
-];
+]});
+// jokeHistory.push(jokes);
+jokeHistory.push(req.body);
+res.sendStatus(201);
 
 // serve back static files
 app.use(express.static('server/public'));
