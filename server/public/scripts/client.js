@@ -1,19 +1,37 @@
 console.log('client.js sourced');
 
-$( document ).ready( onReady );
+$( document ).ready(onReady);
 
 function onReady() {
     console.log('DOM ready');
     $('#addJokeButton').on('click', addJoke);
-}
+    $('#deleteJokeButton').on('click', clearJoke);
+    getJokesToPage();
+};
  
-let addJoke;
-function joke(event) {
-event.preventDefault();
-addJoke = 'Add Joke'
-console.log('add joke', addJoke)
-}
-getJokesToPage();
+
+function addJoke() {
+    let whoseJoke = $('#whoseJokeIn').val();
+    let jokeQuestion = $('#jokeQuestionIn').val();
+    let punchLine = $('#punchLineIn').val();
+
+
+    $.ajax({
+    method: 'POST',
+    url: '/jokes',
+    data: {
+        whoseJoke,
+        jokeQuestion,
+        punchLine
+    }
+    }).then(function(response) {
+        getJokesToPage();
+    }
+    ).catch(function(error) {
+        console.log('POST/ jokes failed', error);
+    });
+};
+
 
 function getJokesToPage() {
 
@@ -22,37 +40,29 @@ function getJokesToPage() {
         url: '/jokes',
 
     }).then(function(response){ 
+        console.log('getting jokes', response);
+        renderToDom(response)
     }).catch(function(error){
-        alert('request faild! :(');
+        
         console.log('response failed: ', error);
     });
-
-    $('#outputDive').empty();
-    
-}
-
-
- let jokeHistory = {
-    whoseJoke: $('#whoseJokeIn').val(),
-        jokeQuestion: $('#questionIn').val(),
-        punchLine: $('#punchlineIn').val()
-        
-
 };
-  console.log(jokeHistory);
 
+function renderToDom(jokes) {
+    $('#outputDiv').empty();
 
+    for (let joke of jokes) {
+        $('#outputDiv').append(`
+        <li>${joke.whoseJoke} ${joke.jokeQuestion} ${joke.punchLine}</li>
+        `)
+    };
+};
 
-$.ajax({
-    method: 'POST',
-    url: '/jokeHistory',
-    data: jokeHistory
-}).then(function(response) {
-    
-}
-).catch(function(error) {
-    console.log('POST/ jokeHistory failed');
-})
+function clearJoke() {
+    $('#whoseJokeIn').val('');
+    $('#questionIn').val('');
+    $('#punchLineIn').val('');
+};
     
 
    
