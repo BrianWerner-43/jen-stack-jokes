@@ -12,7 +12,7 @@ function onReady() {
 
 function addJoke() {
     let whoseJoke = $('#whoseJokeIn').val();
-    let jokeQuestion = $('#jokeQuestionIn').val();
+    let jokeQuestion = $('#questionIn').val();
     let punchLine = $('#punchLineIn').val();
 
 
